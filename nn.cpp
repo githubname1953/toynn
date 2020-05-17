@@ -14,7 +14,7 @@ public:
     Eigen::MatrixXf I;
     Eigen::MatrixXf nout;
     Eigen::MatrixXf dweight;
-    Eigen::MatrixXf grad;
+    //Eigen::MatrixXf grad;
     Eigen::MatrixXf error;
 
     Node(int in, int out)
