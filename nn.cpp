@@ -4,6 +4,7 @@
 #include <random>
 #include<ctime>
 #include<vector>
+#include<algorithm>
 using namespace std;
 
 class Node{
@@ -13,7 +14,7 @@ public:
     Eigen::MatrixXf I;
     Eigen::MatrixXf nout;
     Eigen::MatrixXf dweight;
-    Eigen::MatrixXf grad;
+    //Eigen::MatrixXf grad;
     Eigen::MatrixXf error;
 
     Node(int in, int out)
@@ -23,7 +24,7 @@ public:
         I = Eigen::MatrixXf::Constant(out,1,1.0f);
         nout = Eigen::MatrixXf::Constant(out,1,0.0f);
         dweight = Eigen::MatrixXf::Constant(out,in,0.0f);
-        grad = Eigen::MatrixXf::Constant(out,1,0.0f);
+        //grad = Eigen::MatrixXf::Constant(out,1,0.0f);
         error = Eigen::MatrixXf::Constant(out,1,0.0f);
     }
 
@@ -31,16 +32,16 @@ public:
     {
         nout.noalias() = weight*i + bias;
         nout = (1 + Eigen::exp(-nout.array())).inverse().matrix(); // sigmoid
-        //nout = nout.unaryExpr([](float x){return x>0.0f ? x:0.0f;}); // relu
+        //nout = nout.unaryExpr([](float x){return max(x,0.0f);}); // relu
     }
 
     void backprop( Eigen::MatrixXf &i, float lrate )
     {
-        Eigen::MatrixXf grad = lrate*(error.cwiseProduct(nout.cwiseProduct(I-nout)));
-        //Eigen::MatrixXf grad = lrate*(error.cwiseProduct(nout.unaryExpr([](float x){return x>0.0f ? 1.0f:0.0f;})));
-        Eigen::MatrixXf dweight = (grad*i.transpose());
+        error = (error.cwiseProduct(nout.cwiseProduct(I-nout)));
+        //error = (error.cwiseProduct(nout.unaryExpr([](float x){return float(x>0.0f);})));
+        dweight.noalias() = lrate*(error*i.transpose());
         weight += dweight;
-        bias += grad;
+        bias += lrate*error;
     }
 };
 

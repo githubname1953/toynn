@@ -15,7 +15,7 @@ int main()
 {
     int i,j,k;
     random_device rd; xoshiro128plus32 xg(rd()); 
-    vector<int> configuration={1,16,16,1};
+    vector<int> configuration={1,8,8,1};
     float inputs[nsize][1];
     float outputs[nsize][1];
     float expected[nsize][1];
