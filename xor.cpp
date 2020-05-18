@@ -5,7 +5,7 @@
 #include<ctime>
 #include "Eigen/Dense"
 #include "Eigen/Core"
-#include "nn.cpp"
+#include "nn2.cpp"
 #include "xoshiro.hpp"
 using namespace std;
 #define nsize 512
@@ -19,7 +19,7 @@ int main()
     float inputs[nsize][1];
     float outputs[nsize][1];
     float expected[nsize][1];
-    for(i=0;i<nsize;i++) { inputs[i][0]=(float)i/(float)nsize; expected[i][0]=sin(inputs[i][0]*PI); } 
+    for(i=0;i<nsize;i++) { inputs[i][0]=(float)i/(float)nsize; expected[i][0]=sin(2*inputs[i][0]*PI); } 
     Eigen::MatrixXf inputv = Eigen::MatrixXf::Zero(configuration[0],1);
     Eigen::MatrixXf targetv = Eigen::MatrixXf::Zero(configuration[configuration.size()-1],1);
     Eigen::MatrixXf outputv = Eigen::MatrixXf::Zero(configuration[configuration.size()-1],1);
@@ -41,7 +41,7 @@ int main()
         float it = (float)xg()/(float)xg.max();
         inputv = Eigen::Map<Eigen::MatrixXf>(&it,configuration[0],1);
         nn1.predict(inputv,outputv);
-        cout<<outputv(0,0)<<'\t'<<sin(it*PI)<<endl;
+        cout<<outputv(0,0)<<'\t'<<sin(2*it*PI)<<endl;
     }
 	
 	
